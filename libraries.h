@@ -1,6 +1,8 @@
 #ifndef _LIBRARIES_H_
 #define _LIBRARIES_H_
 
+#define GLFW_INCLUDE_NONE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -14,5 +16,7 @@
 
 
 #include "include/glad/glad.h"
+#include "cglm/include/cglm/cglm.h"
+
 
 #endif
