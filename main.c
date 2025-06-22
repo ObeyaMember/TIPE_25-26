@@ -39,23 +39,18 @@ int main(){
     //                                                                              DATA
 
     float vertices[] = {
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f
+    // positions      // colors         // texture coords
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
     };
 
-    //                                                                              BUFFERS
+    unsigned int indices[] = { // note that we start from 0!
+        0, 1, 3, // first triangle
+        1, 2, 3 // second triangle
+    };
 
-    // SETUP BUFFERS
-    unsigned int VBO, VAO;
-    setup_VAO(&VAO);
-    setup_VBO(&VBO);
-
-    // PASSING THE DATA
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
 
     //                                                                              SETUP SHADER PROGRAMS
     unsigned int shaderProgram, computeProgram;
@@ -68,11 +63,50 @@ int main(){
     /* setup_fvc_shader_prog(&computeProgram, NULL, NULL, &computeShader, "compute");
     fvc_shader_prog_link_error(&computeProgram, "compute"); */
 
+       //                                                                              BUFFERS / TEXTURES
 
+    // SETUP TEXTURES
+    unsigned int texture1, texture2;
+    
+    
+    //setup_texture_from_jpg(&texture2, "assets/textures/land.png", &shaderProgram, "texture2", 1);       // For some unknow reason, there is a conflict between the two, cant show both
+    setup_texture_from_png(&texture1, "assets/textures/awesomeface.png", &shaderProgram, "texture1", 0);
+    
+    
+
+
+
+    // SETUP BUFFERS
+    unsigned int VBO, VAO, EBO;
+    setup_VAO(&VAO);
+    setup_VBO(&VBO);
+    setup_EBO(&EBO);
+
+    // PASSING THE DATA
+
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    
     //                                                                              RENDER LOOP
     while (!glfwWindowShouldClose(window)){
         
-        draw_objects(&shaderProgram, &VAO, GL_TRIANGLES, 0, 3);
+        /* glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture2); */
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        draw_objects_w_texture(&shaderProgram, &VAO, GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         while_loop_window(&window);
     }
 

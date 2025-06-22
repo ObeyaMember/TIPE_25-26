@@ -3,6 +3,7 @@
 
 #include "../libraries.h"
 
+
 // OpenGL window, events, ...
 
 static void error_callback(int error, const char* description);
@@ -16,13 +17,20 @@ void end_process();
 // Render loop specific functions
 
 void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint start_idx, GLsizei num_vertices);
+void draw_objects_w_texture(unsigned int* program, unsigned int* VAO, GLenum mode, GLsizei count, GLenum type, const void* indices);
 
 
 // Buffers
 
 void setup_VBO(unsigned int* VBO);
+void setup_EBO(unsigned int* EBO);
 void setup_VAO(unsigned int* VAO);
 void setup_SSB(unsigned int* SSB);
+
+// Data
+
+void setup_texture_from_jpg(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0);
+void setup_texture_from_png(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0);
 
 // Shaders
 

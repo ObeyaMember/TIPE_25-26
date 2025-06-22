@@ -1,4 +1,6 @@
 #include "utilities.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "../stb_image.h"
 
 // OpenGL window, events...
 
@@ -65,6 +67,12 @@ void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint s
     glDrawArrays(mode, start_idx, num_vertices);
 }
 
+void draw_objects_w_texture(unsigned int* program, unsigned int* VAO, GLenum mode, GLsizei count, GLenum type, const void* indices){
+    glUseProgram(*program);
+    glBindVertexArray(*VAO);
+    glDrawElements(mode, count, type, indices);
+}
+
 
 
 // Buffers
@@ -74,6 +82,11 @@ void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint s
 void setup_VBO(unsigned int* VBO){
     glGenBuffers(1, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+}
+
+void setup_EBO(unsigned int* EBO){
+    glGenBuffers(1, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *EBO);
 }
 
 void setup_VAO(unsigned int* VAO){
@@ -87,7 +100,73 @@ void setup_SSB(unsigned int* SSB){
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, *SSB);        // Are these two lines both necessary??? IDK. If it works it works
 }
 
+// Data
 
+void setup_texture_from_jpg(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0){
+    
+    glGenTextures(1, texture);
+    
+    
+    // set the texture wrapping/filtering options (on currently bound texture)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    // load and generate the texture
+    int width, height, nrChannels;
+
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load(file_name, &width, &height, &nrChannels, 0);
+    
+    if (data){
+    
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    
+    }else {
+        printf("Failed to load texture \n");
+    }
+
+    stbi_image_free(data);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+    glUniform1i(glGetUniformLocation(*program, tex_unit_name), 0);
+}
+
+void setup_texture_from_png(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0){
+    
+    glGenTextures(1, texture);
+    
+    
+    // set the texture wrapping/filtering options (on currently bound texture)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    // load and generate the texture
+    int width, height, nrChannels;
+
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load(file_name, &width, &height, &nrChannels, 0);
+    
+    if (data){
+    
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    
+    }else {
+        printf("Failed to load texture \n");
+    }
+
+    stbi_image_free(data);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+    glUniform1i(glGetUniformLocation(*program, tex_unit_name), v0);
+}
 
 // Shaders
 
