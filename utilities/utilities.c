@@ -67,11 +67,11 @@ void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint s
     glDrawArrays(mode, start_idx, num_vertices);
 }
 
-void draw_objects_w_texture(unsigned int* program, unsigned int* VAO, GLenum mode, GLsizei count, GLenum type, const void* indices){
-    glUseProgram(*program);
-    glBindVertexArray(*VAO);
-    glDrawElements(mode, count, type, indices);
-}
+// void draw_objects_w_texture(unsigned int* program, unsigned int* VAO, GLenum mode, GLsizei count, GLenum type, const void* indices){
+//     glUseProgram(*program);
+//     glBindVertexArray(*VAO);
+//     glDrawElements(mode, count, type, indices);
+// }
 
 
 
@@ -105,6 +105,8 @@ void setup_SSB(unsigned int* SSB){
 void setup_texture_from_jpg(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0){
     
     glGenTextures(1, texture);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+
     
     
     // set the texture wrapping/filtering options (on currently bound texture)
@@ -129,15 +131,12 @@ void setup_texture_from_jpg(unsigned int* texture, const char* file_name, unsign
     }
 
     stbi_image_free(data);
-
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, *texture);
-    glUniform1i(glGetUniformLocation(*program, tex_unit_name), 0);
 }
 
 void setup_texture_from_png(unsigned int* texture, const char* file_name, unsigned int* program, const char* tex_unit_name, GLint v0){
     
     glGenTextures(1, texture);
+    glBindTexture(GL_TEXTURE_2D, *texture);
     
     
     // set the texture wrapping/filtering options (on currently bound texture)
@@ -162,10 +161,6 @@ void setup_texture_from_png(unsigned int* texture, const char* file_name, unsign
     }
 
     stbi_image_free(data);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, *texture);
-    glUniform1i(glGetUniformLocation(*program, tex_unit_name), v0);
 }
 
 // Shaders
