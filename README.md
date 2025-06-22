@@ -7,3 +7,8 @@ export __VK_LAYER_NV_optimus=NVIDIA_only
  - Command for compiling: 
  
 gcc -o exec main.c glad.c -lglfw
+
+ - Ressources
+
+https://learnopengl.com/Guest-Articles/2021/Tessellation/Tessellation
+https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map
