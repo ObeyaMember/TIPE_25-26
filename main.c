@@ -33,8 +33,29 @@ int main(){
     fvc_shader_comp_error(&fragmentShader, "fragment");
     
     // SETUP COMPUTE SHADER
-    setup_fvc_shader(&computeShader, &erosionCompShaderSource, "compute");
-    fvc_shader_comp_error(&computeShader, "compute");
+    /* setup_fvc_shader(&computeShader, &erosionCompShaderSource, "compute");
+    fvc_shader_comp_error(&computeShader, "compute"); */
+
+    //                                                                              DATA
+
+    float vertices[] = {
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.0f, 0.5f, 0.0f
+    };
+
+    //                                                                              BUFFERS
+
+    // SETUP BUFFERS
+    unsigned int VBO, VAO;
+    setup_VAO(&VAO);
+    setup_VBO(&VBO);
+
+    // PASSING THE DATA
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     //                                                                              SETUP SHADER PROGRAMS
     unsigned int shaderProgram, computeProgram;
@@ -44,14 +65,14 @@ int main(){
     fvc_shader_prog_link_error(&shaderProgram, "main_pipeline");
     
     // SETUP COMPUTE PROGRAM
-    setup_fvc_shader_prog(&computeProgram, NULL, NULL, &computeShader, "compute");
-    fvc_shader_prog_link_error(&computeProgram, "compute");
+    /* setup_fvc_shader_prog(&computeProgram, NULL, NULL, &computeShader, "compute");
+    fvc_shader_prog_link_error(&computeProgram, "compute"); */
 
-    //                                                                              WHILE LOOP
+
+    //                                                                              RENDER LOOP
     while (!glfwWindowShouldClose(window)){
         
-        
-        
+        draw_objects(&shaderProgram, &VAO, GL_TRIANGLES, 0, 3);
         while_loop_window(&window);
     }
 

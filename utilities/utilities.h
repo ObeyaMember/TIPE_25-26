@@ -1,7 +1,7 @@
 #ifndef _UTILITIES_H_
 #define _UTILITIES_H_
 
-#include "libraries.h"
+#include "../libraries.h"
 
 // OpenGL window, events, ...
 
@@ -13,7 +13,16 @@ void while_loop_window(GLFWwindow** window);
 void end_window(GLFWwindow** window);
 void end_process();
 
+// Render loop specific functions
+
+void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint start_idx, GLsizei num_vertices);
+
+
 // Buffers
+
+void setup_VBO(unsigned int* VBO);
+void setup_VAO(unsigned int* VAO);
+void setup_SSB(unsigned int* SSB);
 
 // Shaders
 
