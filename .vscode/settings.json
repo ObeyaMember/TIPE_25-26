@@ -2,6 +2,7 @@
   "files.associations": {
     "*.glsl": "glsl",
     "utilities.C": "cpp",
-    "utilities.h": "c"
+    "utilities.h": "c",
+    "libraries.h": "c"
   }
 }

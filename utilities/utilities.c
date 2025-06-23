@@ -165,6 +165,14 @@ void setup_texture_from_png(unsigned int* texture, const char* file_name, unsign
     stbi_image_free(data);
 }
 
+void print_vertex_array(float* a, int n_vertices){
+    printf("[\n");
+    for (int i = 0; i < 3 * n_vertices; i += 3){
+        printf(" (%f, %f, %f)\n", a[i], a[i+1], a[i+2]);
+    }
+    printf(" ] \n");
+}
+
 // Shaders
 
 char* get_shader_content(const char* fileName){
