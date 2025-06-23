@@ -1,6 +1,7 @@
 {
-    "files.associations": {
-        "*.glsl": "glsl",
-        "utilities.C": "cpp"
-    }
+  "files.associations": {
+    "*.glsl": "glsl",
+    "utilities.C": "cpp",
+    "utilities.h": "c"
+  }
 }

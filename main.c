@@ -1,5 +1,6 @@
 #include "libraries.h"
 #include "utilities/utilities.h"
+#include "utilities/utilities.c"
 
 
 const unsigned int SCR_WIDTH = 900;
@@ -69,12 +70,8 @@ int main(){
     unsigned int texture1, texture2;
     
     
-    //setup_texture_from_jpg(&texture2, "assets/textures/land.png", &shaderProgram, "texture2", 1);       // For some unknow reason, there is a conflict between the two, cant show both
     setup_texture_from_png(&texture1, "assets/textures/awesomeface.png", &shaderProgram, "texture1", 0);
-    
-    
-
-
+    setup_texture_from_jpg(&texture2, "assets/textures/land.png", &shaderProgram, "texture2", 1);       // For some unknow reason, there is a conflict between the two, cant show both
 
     // SETUP BUFFERS
     unsigned int VBO, VAO, EBO;
@@ -122,13 +119,9 @@ int main(){
 
     //                                                                              RENDER LOOP
     while (!glfwWindowShouldClose(window)){
-        
-        /* glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture2); */
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture1);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      
         int modelLoc = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model[0]);
         int viewLoc = glGetUniformLocation(shaderProgram, "view");
@@ -136,6 +129,23 @@ int main(){
         int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
         glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection[0]);
         draw_objects_w_texture(&shaderProgram, &VAO, GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        // draw_objects_w_texture(&shaderProgram, &VAO, GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glUseProgram(shaderProgram);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+
+        glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+        glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+ 
+
         while_loop_window(&window);
     }
 
