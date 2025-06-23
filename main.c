@@ -93,11 +93,43 @@ int main(){
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
+    //                                                                              CAMERA
     
+    vec3 x_axis = {1,0,0};
+    vec3 y_axis = {0,1,0};
+    vec3 z_axis = {0,0,1};
+    mat4 model, view, projection;
+    
+    glm_mat4_identity(model);
+    glm_rotate(model, glm_rad(-55.0), x_axis);
+    vec3 a;
+    glm_vec3_scale(z_axis, -3, a);
+    glm_mat4_identity(view);
+    glm_translate(view, a);
+
+    float fov = 110.0;
+    float aspect = 800.0 / 600.0;
+    float near = 0.1;
+    float far = 100.0;
+    
+    glm_perspective(glm_rad(fov), aspect, near, far, projection);
+    
+   
+
+
     //                                                                              RENDER LOOP
     while (!glfwWindowShouldClose(window)){
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      
+        int modelLoc = glGetUniformLocation(shaderProgram, "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model[0]);
+        int viewLoc = glGetUniformLocation(shaderProgram, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, view[0]);
+        int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, projection[0]);
+        draw_objects_w_texture(&shaderProgram, &VAO, GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
         // draw_objects_w_texture(&shaderProgram, &VAO, GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glUseProgram(shaderProgram);
@@ -113,6 +145,7 @@ int main(){
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
  
+
         while_loop_window(&window);
     }
 

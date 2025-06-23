@@ -73,6 +73,8 @@ void draw_objects(unsigned int* program, unsigned int* VAO, GLenum mode, GLint s
 //     glDrawElements(mode, count, type, indices);
 // }
 
+// Camera
+
 
 
 // Buffers
