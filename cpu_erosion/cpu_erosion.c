@@ -2,7 +2,7 @@
 #include "../utilities/utilities.h"
 #include "../stb_perlin.h"
 
-void create_new_heightmap(){
+void vertices_from_heightmap(int ){
 
 }
 

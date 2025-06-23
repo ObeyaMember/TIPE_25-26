@@ -73,6 +73,8 @@ void draw_objects_w_texture(unsigned int* program, unsigned int* VAO, GLenum mod
     glDrawElements(mode, count, type, indices);
 }
 
+// Camera
+
 
 
 // Buffers
